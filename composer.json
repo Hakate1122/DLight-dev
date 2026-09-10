@@ -11,7 +11,7 @@
         "ext-sockets": "*",
         "psr/log": "^3",
         "datahihi1/tiny-env": "*",
-        "symfony/console": "^8.1"
+        "symfony/console": "*"
     },
     "require-dev": {
         "rector/rector": ">=2.4",
