@@ -1,5 +1,8 @@
 ## `2026.9.10-dev` (2026-09-10)
 
+### Added
+- GitHub/Gitea CI workflows for DLight CLI: add automation to install Composer dependencies, bootstrap `.env`, and run `php dli help` / `php dli test` in CI without interactive prompts.
+
 ### Changed
 - App runtime and CLI bootstrap: refresh environment detection, runtime mode checks, maintenance/security handling, and versioning metadata in `src/Application/App.php` to keep the framework behavior consistent across CLI and web entry points.
 - Router improvements: normalize static route and API route registration, group prefix handling, and duplicate route protection in `src/Application/Router.php` and route definitions under `app/Router/*` to avoid malformed paths and route collisions.
