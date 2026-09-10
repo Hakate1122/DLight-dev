@@ -14,7 +14,7 @@ class Handler implements HandlerInterface
     private RenderInterface $renderer;
 
     /**
-     * Resignter a new error and exception handler
+     * Register a new error and exception handler
      * 
      * @param bool $saveLog Whether to save logs to a file
      * @param string $logFile The log file path
@@ -29,6 +29,11 @@ class Handler implements HandlerInterface
         register_shutdown_function([$this, 'handleRuntime']);
     }
 
+    /**
+     * Detect the appropriate renderer based on the environment (CLI or Web)
+     *
+     * @return RenderInterface The renderer instance
+     */
     private function detectRenderer(): RenderInterface
     {
         return php_sapi_name() === 'cli'

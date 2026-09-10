@@ -396,7 +396,7 @@ if ($cmd === 'build') {
     }
     $opts = [];
     $baseDir = __DIR__;
-    $jsonPath = $baseDir . DIRECTORY_SEPARATOR . 'build-phar.json';
+    $jsonPath = $baseDir . DIRECTORY_SEPARATOR . 'config-build.json';
     $jsonConfig = null;
     $configDetected = false;
     if (file_exists($jsonPath)) {
@@ -434,7 +434,7 @@ if ($cmd === 'build') {
                 }
             }
         } else {
-            echo "build-phar.json exists but is not valid JSON.\n";
+            echo "config-build.json exists but is not valid JSON.\n";
         }
     }
     // parse remaining CLI args (override json if present)
@@ -471,7 +471,7 @@ if ($cmd === 'build') {
     }
     // Nếu phát hiện config, hỏi người dùng muốn build tự động hay thủ công
     if ($configDetected) {
-        echo "\nPhát hiện file cấu hình build-phar.json.\n";
+        echo "\nPhát hiện file cấu hình config-build.json.\n";
         echo "Bạn muốn build PHAR tự động theo cấu hình này không?\n";
         echo "Chọn (a) để build tự động, (m) để build thủ công, (q) để thoát: ";
         $choice = strtolower(trim(fgets(STDIN)));

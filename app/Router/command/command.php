@@ -1,12 +1,15 @@
 <?php
 
-// $cli = new DLight\Application\Command();
-
 use App\Chat\Chat;
+use DLight\Application\Command;
+
+if (!isset($cli) || !($cli instanceof Command)) {
+    $cli = new Command();
+}
 
 $cli->register('hello', [\App\Command\Hello::class, 'handle']);
 $cli->register('choice', [\App\Command\Hello::class, 'choice']);
-$cli->register('hi', [\App\Command\Hello::class, 'num']);
+$cli->register('hi', [\App\Command\Hello::class, 'handle']);
 
 $cli->register('sample', [\App\Command\Sample::class, 'handle']);
 $cli->register('quiz', [\App\Command\Sample::class, 'quiz']);
@@ -46,4 +49,30 @@ $cli->register('env',function(){
     $env->load();
     dump($env);
     dd(env());
+});
+
+$cli->register('test:symfony_console',function(){
+
+// Khởi tạo output cho CLI
+$output = new Symfony\Component\Console\Output\ConsoleOutput();
+
+// Dữ liệu sản phẩm
+$products = [
+    [1, 'Laptop Gaming ASUS ROG', '25,000,000 đ', 12],
+    [2, 'Bàn phím cơ Keychron K6', '1,850,000 đ', 45],
+    [3, 'Chuột Logitech G304', '850,000 đ', 30],
+    [4, 'Màn hình UltraWide LG 29"', '5,600,000 đ', 5],
+];
+
+// Khởi tạo bảng
+$table = new Symfony\Component\Console\Helper\Table($output);
+
+// Thiết lập tiêu đề và dữ liệu
+$table
+    ->setHeaders(['ID', 'Tên sản phẩm', 'Giá bán', 'Tồn kho'])
+    ->setRows($products);
+
+// Hiển thị bảng ra màn hình terminal
+$output->writeln("<info>=== QUẢN LÝ SẢN PHẨM CLI ===</info>");
+$table->render();
 });

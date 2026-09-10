@@ -84,7 +84,7 @@ $mail->to('recipient@example.com')
 ```
 
 ## System Requirements
-- PHP 8.0 to 8.5 (Update at 20:00 2025-12-09 UTC+7)
+- PHP 8.0 to 8.6.0beta2 (Update at 12:22 2026-08-31 UTC+7) - This framework has been testing
 - Composer
 - Web Server (Apache, Nginx, etc.)
 

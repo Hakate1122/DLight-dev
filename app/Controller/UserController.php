@@ -13,7 +13,7 @@ class UserController
     }
     public function listUsers()
     {
-        $allUsers = $this->users::mapper()::all();
+        $allUsers = $this->users::mapper()->all();
         return View::render('user1/list', ['users' => $allUsers]);
     }
 
@@ -56,6 +56,8 @@ class UserController
                 'email' => $email
             ])
             ->execute();
+
+        flash('success', 'Người dùng đã được thêm thành công.');
         return redirect()->route('user.list');
     }
 
@@ -101,6 +103,8 @@ class UserController
                 'email' => $email
             ])
             ->execute();
+
+        flash('success', 'Thông tin người dùng đã được cập nhật.');
         return redirect()->route('user.list');
     }
     public function deleteUser($id)
@@ -109,6 +113,8 @@ class UserController
             ->where('id', $id)
             ->delete()
             ->execute();
+
+        flash('success', 'Người dùng đã được xóa.');
         return redirect()->route('user.list');
     }
 }

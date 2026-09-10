@@ -266,7 +266,7 @@ class Core
             echo "  help, -h             Show this help message\n";
             echo "  help:add             Detailed help for add / add:<type>\n";
             echo "  version, -v          Show application version\n";
-            echo "  server, -s           Start the development server\n";
+            if (!App::isRunningFromPhar()) {echo "  server, -s           Start the development server\n";}
             echo "  list                 List all available commands\n";
             echo "  test                 Run unit tests\n";
             echo "\n";

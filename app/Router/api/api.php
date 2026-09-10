@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+use Datahihi1\TinyEnv\TinyEnv;
 
 $router = new DLight\Application\Router();
 
@@ -8,16 +9,12 @@ $router->signApi('GET /', fn() => "Hello, World!")->name('api.home');
 
 // Demo Send Mail
 $router->signApi('GET /demo/mail', function () {
-    try {
         $mail = new DLight\Application\Mail();
         $mail->to(email: 'datndph42403@gmail.com')
             ->subject(subject: 'Test Email from DLight Mailer 2.0')
             ->body('This is a test email sent from DLight Mailer 2.0.');
         $mail->send();
         return 'Email sent successfully!';
-    } catch (\Exception $e) {
-        return 'Error sending email: ' . $e->getMessage();
-    }
 })->name('api.demo.mail');
 
 // Demo Redis Cache
@@ -53,3 +50,8 @@ $router->signApi('GET /demo/cache', function () {
         'has_user' => $hasUser,
     ];
 })->name('api.demo.cache');
+
+$router->sign('GET /env', function () {
+    $env = new TinyEnv(ROOT_DIR);
+    dump($env->env());
+})->name('demo.env');

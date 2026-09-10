@@ -22,7 +22,7 @@ class App
      * Version of DLight Framework.
      * @var string
      */
-    public const VERSION = '2026.6.24-dev';
+    public const VERSION = '2026.9.10-dev';
     /**
      * Alias for version constant
      */
@@ -70,6 +70,10 @@ class App
      * Optional stored path for DLI/command routes when set via `setUpDliRoutes()`.
      */
     private ?string $dliRoutesPath = null;
+    /**
+     * Optional static default command for DLI (can be set via App::dliDefaultCommand()).
+     */
+    private static ?string $dliDefaultCommand = null;
 
     /**
      * Constructor for App class to determine ROOT_DIR and INDEX_DIR
@@ -330,6 +334,24 @@ class App
         }
 
         return false;
+    }
+
+    /**
+     * Get or set the DLI default command used when booting the CLI.
+     *
+     * - `App::dliDefaultCommand('help')` sets the default command.
+     * - `App::dliDefaultCommand()` returns the current configured default or null.
+     *
+     * @param string|null $cmd
+     * @return string|null
+     */
+    public static function dliDefaultCommand(?string $cmd = null): ?string
+    {
+        if (func_num_args() > 0) {
+            self::$dliDefaultCommand = $cmd;
+            return $cmd;
+        }
+        return self::$dliDefaultCommand;
     }
 
     /**
@@ -639,6 +661,12 @@ class App
 
         // Kernel
         $cli = new Command();
+
+        // If a default DLI command was configured via App::dliDefaultCommand(), apply it
+        $default = self::dliDefaultCommand();
+        if (is_string($default) && trim($default) !== '') {
+            $cli->property('default_command', $default);
+        }
 
         // Load core commands
         (new Register())->core($cli);

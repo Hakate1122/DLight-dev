@@ -10,7 +10,6 @@ use ReflectionMethod;
 use ReflectionFunction;
 use ReflectionNamedType;
 use DLight\Application\Middleware;
-use DLight\Attribute\Deprecated;
 
 /**
  * **HTTP Router**
@@ -85,7 +84,7 @@ class Router
     private static function parseRouteSpec(string $spec): array
     {
         if (!preg_match('#^([A-Z|]+)\s+(.+)$#', trim($spec), $m)) {
-            throw new Exception("Invalid route spec: $spec. Use 'METHOD|/path' or 'METHOD1|METHOD2 /path'");
+            throw new Exception("Invalid route spec: $spec. Use 'METHOD /path' or 'METHOD1|METHOD2 /path'");
         }
 
         $methods = array_filter(array_map('trim', explode('|', $m[1])), fn($m) => $m !== '');
@@ -534,7 +533,6 @@ class Router
             [$class, $method] = $handler;
             $instance = $this->resolveClass($class);
             $ref = new ReflectionMethod($instance, $method);
-            $this->emitDeprecationIfNeeded($ref);
         } else {
             $ref = new ReflectionFunction(Closure::fromCallable($handler));
         }
@@ -571,28 +569,6 @@ class Router
         return $ref instanceof ReflectionMethod
             ? $ref->invokeArgs($instance, $args)
             : $ref->invokeArgs($args);
-    }
-
-    private function emitDeprecationIfNeeded(ReflectionMethod $method): void
-    {
-        $attrs = $method->getAttributes(Deprecated::class);
-        if ($attrs === []) {
-            $classAttrs = $method->getDeclaringClass()->getAttributes(Deprecated::class);
-            if (!$classAttrs) {
-                return;
-            }
-            $attrs = $classAttrs;
-        }
-
-        $args = $attrs[0]->getArguments();
-        $message = $args['message'] ?? $args[0] ?? 'This method is deprecated and will be removed in future versions.';
-        $since = $args['since'] ?? $args[1] ?? null;
-
-        $full = $since
-            ? "[DEPRECATED since {$since}] {$message}"
-            : "[DEPRECATED] {$message}";
-
-        trigger_error($full, E_USER_DEPRECATED);
     }
 
     private function runDefaultHandler(): void

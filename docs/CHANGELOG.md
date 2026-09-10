@@ -1,3 +1,12 @@
+## `2026.9.10-dev` (2026-09-10)
+
+### Changed
+- App runtime and CLI bootstrap: refresh environment detection, runtime mode checks, maintenance/security handling, and versioning metadata in `src/Application/App.php` to keep the framework behavior consistent across CLI and web entry points.
+- Router improvements: normalize static route and API route registration, group prefix handling, and duplicate route protection in `src/Application/Router.php` and route definitions under `app/Router/*` to avoid malformed paths and route collisions.
+- Command scaffolding and DX: expand `php dli add` generation behavior in `src/Command/Add.php` with stronger option parsing, nested controller naming support, `--force` overwrite handling, and richer CRUD / API-CRUD templates for controller/model/view generation.
+- Reporting and helper updates: refine report output and helper behaviors in `src/Reports/*` and `src/Helper/functions.php` for more reliable runtime diagnostics and cleaner developer output.
+- Demo app refresh: update demo route registration and sample user views to match the current app flow and conventions.
+
 ## `2026.5.31-dev` (2026-05-31)
 
 ### Changed

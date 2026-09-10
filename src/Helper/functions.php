@@ -156,6 +156,17 @@ if (!function_exists('dump')) {
     }
 }
 
+if(!function_exists('dumpJson')) {
+    /**
+     * Dump variable as JSON for debugging purposes.
+     * @param mixed $var The variable to dump.
+     */
+    function dumpJson($var): void
+    {
+
+    }
+}
+
 /**
  * Custom var_dump function that supports HTML output and recursion detection.
  *
@@ -205,7 +216,7 @@ function craft_custom_var_dump($var, $indent = 0, &$references = []): string
 
     $colorize = (fn(string $text, string $color): string => $isCli ? $ansi($text, $color) : $htmlWrap($text, $color));
     if (is_object($var)) {
-        $varKey = spl_object_hash($var);
+        $varKey = spl_object_id($var);
     } elseif (is_array($var)) {
         $varKey = md5(json_encode($var, JSON_PARTIAL_OUTPUT_ON_ERROR));
     }

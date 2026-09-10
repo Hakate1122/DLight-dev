@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-// dli - DLight Command Line Interface Bootstrapper
+// dli - DLight command line interface bootstrapper
 /*
  * DLight - A lightweight PHP framework for web and CLI applications.
  * 

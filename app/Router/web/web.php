@@ -9,8 +9,6 @@ UserAuthencation::sign();
 
 $router = new DLight\Application\Router();
 
-$router->sign('GET /', [\App\Controller\HomeController::class, 'home'])->name('home');
-
 $router->sign('GET /h', function () {
     echo "<img src='" . asset('unnamed.jpg') . "' alt='Logo'>";
 })->name('home.alias');
@@ -116,4 +114,5 @@ $router->sign('GET /site-map', [\App\Controller\SitemapController::class, 'index
 
 $router->scanControllerAttributes([
     App\Controller\UserController::class,
+    App\Controller\HomeController::class,
 ]);

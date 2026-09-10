@@ -2,6 +2,8 @@
 
 namespace DLight\Command;
 
+use DLight\Application\App;
+
 class Add
 {
 	private static function studly(string $value): string
@@ -50,33 +52,33 @@ class Add
 			}
 
 			$type = strtolower($type);
-				switch ($type) {
-					case 'controller':
-					case 'ctrl':
-						(self::controller())($argv);
-						break;
-					case 'model':
-					case 'mdl':
-						(self::model())($argv);
-						break;
-					case 'view':
-					case 'vw':
-						(self::view())($argv);
-						break;
-					case 'command':
-					case 'cmd':
-						(self::command())($argv);
-						break;
-					case 'middleware':
-					case 'mdw':
-						(self::middleware())($argv);
-						break;
-					case 'mail':
-						(self::mail())($argv);
-						break;
-					default:
-						echo "Unknown add type: $type\n";
-				}
+			switch ($type) {
+				case 'controller':
+				case 'ctrl':
+					(self::controller())($argv);
+					break;
+				case 'model':
+				case 'mdl':
+					(self::model())($argv);
+					break;
+				case 'view':
+				case 'vw':
+					(self::view())($argv);
+					break;
+				case 'command':
+				case 'cmd':
+					(self::command())($argv);
+					break;
+				case 'middleware':
+				case 'mdw':
+					(self::middleware())($argv);
+					break;
+				case 'mail':
+					(self::mail())($argv);
+					break;
+				default:
+					echo cli_red("Unknown add type: $type\n");
+			}
 		};
 	}
 
@@ -91,7 +93,7 @@ class Add
 
 			$name = $opts['name'] ?? $opts['n'] ?? null;
 			if (!$name) {
-				echo "Please provide a name: --name=MyController\n";
+				echo cli_red("Please provide a name: --name=MyController\n");
 				return;
 			}
 
@@ -100,9 +102,9 @@ class Add
 			$raw = trim($raw, '/');
 			$raw = preg_replace('/\.php$/i', '', $raw);
 
-			$pathParts = array_values(array_filter(explode('/', (string) $raw), static fn ($p) => $p !== ''));
+			$pathParts = array_values(array_filter(explode('/', (string) $raw), static fn($p) => $p !== ''));
 			if (count($pathParts) === 0) {
-				echo "Invalid controller name: --name=MyController\n";
+				echo cli_red("Invalid controller name: --name=MyController\n");
 				return;
 			}
 
@@ -110,14 +112,14 @@ class Add
 			$dirParts = $pathParts;
 
 			$dirParts = array_values(array_filter(array_map(
-				static fn ($p) => preg_replace('/[^A-Za-z0-9_]/', '', $p),
+				static fn($p) => preg_replace('/[^A-Za-z0-9_]/', '', $p),
 				$dirParts
-			), static fn ($p) => $p !== ''));
+			), static fn($p) => $p !== ''));
 
 			$name = preg_replace('/[^A-Za-z0-9_]/', '', $classPart);
 			$name = self::studly($name);
 			if ($name === '') {
-				echo "Invalid controller class name: --name=MyController\n";
+				echo cli_red("Invalid controller class name: --name=MyController\n");
 				return;
 			}
 			if (!str_ends_with($name, 'Controller')) {
@@ -126,21 +128,21 @@ class Add
 
 			$dir = __DIR__ . '/../../app/Controller' . ($dirParts === [] ? ('') : '/' . implode('/', $dirParts));
 			if (!is_dir($dir) && !@mkdir($dir, 0755, true)) {
-                echo "Failed to create directory: $dir\n";
-                return;
-            }
+				echo cli_red("Failed to create directory: $dir\n");
+				return;
+			}
 
 			$file = $dir . '/' . $name . '.php';
 			$rel = 'app/Controller' . ($dirParts === [] ? ('') : '/' . implode('/', $dirParts)) . "/$name.php";
 			$existedBefore = file_exists($file);
 			if ($existedBefore && !self::wantsForce($opts)) {
-				echo "Controller already exists: $rel\n";
+				echo cli_red("Controller already exists: $rel\n");
 				return;
 			}
 
 			$namespace = 'App\\Controller' . ($dirParts === [] ? ('') : '\\' . implode('\\', $dirParts));
-			$apiCrud = (bool)($opts['api-crud'] ?? false);
-			$crud = (bool)($opts['crud'] ?? false);
+			$apiCrud = (bool) ($opts['api-crud'] ?? false);
+			$crud = (bool) ($opts['crud'] ?? false);
 
 			if ($apiCrud) {
 				$template = "<?php\n\nnamespace $namespace;\n\nclass $name\n{\n    public function index()\n    {\n        header('Content-Type: application/json');\n        echo json_encode(['data' => []]);\n    }\n\n    public function store()\n    {\n        header('Content-Type: application/json');\n        // TODO: validate input and persist\n        echo json_encode(['message' => 'created'], JSON_UNESCAPED_UNICODE);\n    }\n\n    public function show(\$id)\n    {\n        header('Content-Type: application/json');\n        echo json_encode(['id' => \$id]);\n    }\n\n    public function update(\$id)\n    {\n        header('Content-Type: application/json');\n        // TODO: validate input and update\n        echo json_encode(['message' => 'updated', 'id' => \$id], JSON_UNESCAPED_UNICODE);\n    }\n\n    public function destroy(\$id)\n    {\n        header('Content-Type: application/json');\n        // TODO: delete resource\n        echo json_encode(['message' => 'deleted', 'id' => \$id], JSON_UNESCAPED_UNICODE);\n    }\n}\n";
@@ -151,9 +153,9 @@ class Add
 			}
 
 			if (file_put_contents($file, $template) !== false) {
-				echo ($existedBefore ? "Overwrote controller: $rel\n" : "Created controller: $rel\n");
+				echo ($existedBefore ? cli_yellow("Overwrote controller: $rel\n") : cli_green("Created controller: $rel\n"));
 			} else {
-				echo "Failed to create controller: $file\n";
+				echo cli_red("Failed to create controller: $file\n");
 			}
 		};
 	}
@@ -166,13 +168,13 @@ class Add
 
 			$name = $opts['name'] ?? $opts['n'] ?? null;
 			if (!$name) {
-				echo "Please provide a name: --name=Posts [--table=posts] [--selectable=id,title]\n";
+				echo cli_red("Please provide a name: --name=Posts [--table=posts] [--selectable=id,title]\n");
 				return;
 			}
 
 			$className = self::modelClassNameFromArg((string) $name);
 			if ($className === '') {
-				echo "Invalid model class name: --name=Posts\n";
+				echo cli_red("Invalid model class name: --name=Posts\n");
 				return;
 			}
 
@@ -181,14 +183,14 @@ class Add
 
 			$dir = __DIR__ . '/../../app/Model';
 			if (!is_dir($dir) && !@mkdir($dir, 0755, true)) {
-                echo "Failed to create directory: $dir\n";
-                return;
-            }
+				echo cli_red("Failed to create directory: $dir\n");
+				return;
+			}
 
 			$file = $dir . '/' . $className . '.php';
 			$existedBefore = file_exists($file);
 			if ($existedBefore && !self::wantsForce($opts)) {
-				echo "Model already exists: app/Model/$className.php\n";
+				echo cli_red("Model already exists: app/Model/$className.php\n");
 				return;
 			}
 
@@ -201,9 +203,9 @@ class Add
 			$template = "<?php\n\nnamespace App\\Model;\n\nuse App\\Model\\Model;\n\nclass {$className} extends Model\n{\n{$body}}\n";
 
 			if (file_put_contents($file, $template) !== false) {
-				echo ($existedBefore ? "Overwrote model: app/Model/{$className}.php\n" : "Created model: app/Model/{$className}.php\n");
+				echo ($existedBefore ? cli_yellow("Overwrote model: app/Model/{$className}.php\n") : cli_green("Created model: app/Model/{$className}.php\n"));
 			} else {
-				echo "Failed to create model: $file\n";
+				echo cli_red("Failed to create model: $file\n");
 			}
 		};
 	}
@@ -216,30 +218,30 @@ class Add
 
 			$name = $opts['name'] ?? $opts['n'] ?? null;
 			if (!$name) {
-				echo "Please provide a name: --name=templateName\n";
+				echo cli_red("Please provide a name: --name=templateName\n");
 				return;
 			}
 
 			$name = preg_replace('/[^A-Za-z0-9_\.\-]/', '', $name);
 			$dir = __DIR__ . '/../../resource/view';
 			if (!is_dir($dir) && !@mkdir($dir, 0755, true)) {
-                echo "Failed to create directory: $dir\n";
-                return;
-            }
+				echo cli_red("Failed to create directory: $dir\n");
+				return;
+			}
 
 			$file = $dir . '/' . $name . '.php';
 			$existedBefore = file_exists($file);
 			if ($existedBefore && !self::wantsForce($opts)) {
-				echo "View already exists: resource/view/$name.php\n";
+				echo cli_red("View already exists: resource/view/$name.php\n");
 				return;
 			}
 
 			$template = "<?php\n\n/** View: $name */\n?>\n<h1>$name</h1>\n";
 
 			if (file_put_contents($file, $template) !== false) {
-				echo ($existedBefore ? "Overwrote view: resource/view/$name.php\n" : "Created view: resource/view/$name.php\n");
+				echo ($existedBefore ? cli_yellow("Overwrote view: resource/view/$name.php\n") : cli_green("Created view: resource/view/$name.php\n"));
 			} else {
-				echo "Failed to create view: $file\n";
+				echo cli_red("Failed to create view: $file\n");
 			}
 		};
 	}
@@ -252,7 +254,7 @@ class Add
 
 			$name = $opts['name'] ?? $opts['n'] ?? null;
 			if (!$name) {
-				echo "Please provide a name: --name=MyCommand\n";
+				echo cli_red("Please provide a name: --name=MyCommand\n");
 				return;
 			}
 
@@ -263,23 +265,23 @@ class Add
 
 			$dir = __DIR__ . '/..'; // src/Command
 			if (!is_dir($dir) && !@mkdir($dir, 0755, true)) {
-                echo "Failed to create directory: $dir\n";
-                return;
-            }
+				echo cli_red("Failed to create directory: $dir\n");
+				return;
+			}
 
 			$file = $dir . '/' . $name . '.php';
 			$existedBefore = file_exists($file);
 			if ($existedBefore && !self::wantsForce($opts)) {
-				echo "Command already exists: src/Command/$name.php\n";
+				echo cli_red("Command already exists: src/Command/$name.php\n");
 				return;
 			}
 
 			$template = "<?php\n\nnamespace DLight\\Command;\n\nclass $name\n{\n    public static function handle()\n    {\n        return function (\$argv = []) {\n            echo \"$name executed\";\n        };\n    }\n}\n";
 
 			if (file_put_contents($file, $template) !== false) {
-				echo ($existedBefore ? "Overwrote command: src/Command/$name.php\n" : "Created command: src/Command/$name.php\n");
+				echo ($existedBefore ? cli_yellow("Overwrote command: src/Command/$name.php\n") : cli_green("Created command: src/Command/$name.php\n"));
 			} else {
-				echo "Failed to create command: $file\n";
+				echo cli_red("Failed to create command: $file\n");
 			}
 		};
 	}
@@ -292,7 +294,7 @@ class Add
 
 			$name = $opts['name'] ?? $opts['n'] ?? null;
 			if (!$name) {
-				echo "Please provide a name: --name=MyMiddleware\n";
+				echo cli_red("Please provide a name: --name=MyMiddleware\n");
 				return;
 			}
 
@@ -303,23 +305,23 @@ class Add
 
 			$dir = __DIR__ . '/../../app/Middleware';
 			if (!is_dir($dir) && !@mkdir($dir, 0755, true)) {
-                echo "Failed to create directory: $dir\n";
-                return;
-            }
+				echo cli_red("Failed to create directory: $dir\n");
+				return;
+			}
 
 			$file = $dir . '/' . $name . '.php';
 			$existedBefore = file_exists($file);
 			if ($existedBefore && !self::wantsForce($opts)) {
-				echo "Middleware already exists: app/Middleware/$name.php\n";
+				echo cli_red("Middleware already exists: app/Middleware/$name.php\n");
 				return;
 			}
 
 			$template = "<?php\n\nnamespace App\\Middleware;\n\nuse DLight\\Application\\Middleware;\n\nclass $name extends Middleware\n{\n    public static function sign(): void\n    {\n        Middleware::register('{$name}', function () {\n            // TODO: implement middleware logic\n            return null;\n        });\n    }\n}\n";
 
 			if (file_put_contents($file, $template) !== false) {
-				echo ($existedBefore ? "Overwrote middleware: app/Middleware/$name.php\n" : "Created middleware: app/Middleware/$name.php\n");
+				echo ($existedBefore ? cli_yellow("Overwrote middleware: app/Middleware/$name.php\n") : cli_green("Created middleware: app/Middleware/$name.php\n"));
 			} else {
-				echo "Failed to create middleware: $file\n";
+				echo cli_red("Failed to create middleware: $file\n");
 			}
 		};
 	}
@@ -332,7 +334,7 @@ class Add
 
 			$name = $opts['name'] ?? $opts['n'] ?? null;
 			if (!$name) {
-				echo "Please provide a name: --name=MyMailer\n";
+				echo cli_red("Please provide a name: --name=MyMailer\n");
 				return;
 			}
 
@@ -343,23 +345,23 @@ class Add
 
 			$dir = __DIR__ . '/../../app/Mail';
 			if (!is_dir($dir) && !@mkdir($dir, 0755, true)) {
-                echo "Failed to create directory: $dir\n";
-                return;
-            }
+				echo cli_red("Failed to create directory: $dir\n");
+				return;
+			}
 
 			$file = $dir . '/' . $name . '.php';
 			$existedBefore = file_exists($file);
 			if ($existedBefore && !self::wantsForce($opts)) {
-				echo "Mail class already exists: app/Mail/$name.php\n";
+				echo cli_red("Mail class already exists: app/Mail/$name.php\n");
 				return;
 			}
 
 			$template = "<?php\n\nnamespace App\\Mail;\n\nclass $name\n{\n    public function send(\$to, \$subject, \$body)\n    {\n        // integrate with Mailer\n        return true;\n    }\n}\n";
 
 			if (file_put_contents($file, $template) !== false) {
-				echo ($existedBefore ? "Overwrote mail class: app/Mail/$name.php\n" : "Created mail class: app/Mail/$name.php\n");
+				echo ($existedBefore ? cli_yellow("Overwrote mail class: app/Mail/$name.php\n") : cli_green("Created mail class: app/Mail/$name.php\n"));
 			} else {
-				echo "Failed to create mail class: $file\n";
+				echo cli_red("Failed to create mail class: $file\n");
 			}
 		};
 	}
@@ -450,13 +452,13 @@ class Add
 	/** True when --force is present (overwrite existing scaffold files). */
 	private static function wantsForce(array $opts): bool
 	{
-		return (bool)($opts['force'] ?? false);
+		return (bool) ($opts['force'] ?? false);
 	}
 
 	private static function parseOptions(array $argv, int $start = 2): array
 	{
 		$opts = [];
-        $counter = count($argv);
+		$counter = count($argv);
 		for ($i = $start; $i < $counter; $i++) {
 			$arg = $argv[$i];
 			if (str_starts_with($arg, '--')) {
@@ -465,7 +467,7 @@ class Add
 			} elseif (str_starts_with($arg, '-')) {
 				$key = ltrim($arg, '-');
 				$val = $argv[$i + 1] ?? true;
-				if (!str_starts_with((string)$val, '-')) {
+				if (!str_starts_with((string) $val, '-')) {
 					$opts[$key] = $val;
 					$i++;
 				} else {

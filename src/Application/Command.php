@@ -12,6 +12,7 @@ use DLight\Command\Helper\CommandEntry;
 class Command
 {
     public array $commands = [];
+    private array $properties = [];
 
     /**
      * Register a new command.
@@ -24,13 +25,17 @@ class Command
      */
     public function register(string $name, callable|array|string $handler, bool $hiddenOnPhar = false): CommandEntry
     {
+        if (isset($this->commands[$name])) {
+            throw new \InvalidArgumentException("Duplicate command name: $name");
+        }
+
         $entry = new CommandEntry($this, $name, $handler, $hiddenOnPhar);
         $this->commands[$name] = $entry;
         return $entry;
     }
 
     /**
-     * Register an alias for an existing command.
+     * Register an alias for an existing command. An existing command must be registered before creating an alias for it.
      *
      * Example: registerAlias('say:greet', 'greet')
      *
@@ -38,14 +43,38 @@ class Command
      */
     public function registerAlias(string $alias, string $target): CommandEntry
     {
+        if (isset($this->commands[$alias])) {
+            throw new \InvalidArgumentException("Duplicate command name: $alias");
+        }
+
         if (!isset($this->commands[$target])) {
             throw new \InvalidArgumentException("Target command not found: $target");
         }
+
         $this->commands[$alias] = $this->commands[$target];
         return $this->commands[$target];
     }
 
-    public function property(string $name, mixed $default = null){}
+    /**
+     * Get or set a property for the command manager.
+     *
+     * @param string $name Property name
+     * @param mixed|null $default Default value if setting a new property
+     * @return mixed The property value or null if not set
+     */
+    public function property(string $name, mixed $default = null): mixed
+    {
+        if (array_key_exists($name, $this->properties)) {
+            return $this->properties[$name];
+        }
+
+        if (func_num_args() > 1) {
+            $this->properties[$name] = $default;
+            return $default;
+        }
+
+        return null;
+    }
 
     public function hasCommand(string $name): bool{
         return isset($this->commands[$name]);
@@ -53,7 +82,23 @@ class Command
 
     public function run(array $argv): void
     {
-        $cmd = $argv[1] ?? 'help';
+        $cmd = $argv[1] ?? null;
+
+        if ($cmd === null || $cmd === '') {
+            $defaultCommand = $this->property('default_command');
+            if ($defaultCommand === null || $defaultCommand === '') {
+                $defaultCommand = $this->property('default');
+            }
+            if ($defaultCommand === null || $defaultCommand === '') {
+                $defaultCommand = function_exists('env') ? env('DLI_DEFAULT_COMMAND') : null;
+            }
+
+            if (is_string($defaultCommand) && trim($defaultCommand) !== '') {
+                $cmd = trim($defaultCommand);
+            } else {
+                $cmd = 'help';
+            }
+        }
 
         if (!isset($this->commands[$cmd])) {
             echo cli_red("Command not found: $cmd\n");

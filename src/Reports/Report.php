@@ -8,6 +8,8 @@ use DLight\Reports\Render\Cli;
 
 /**
  * Report - Global error and exception handling class
+ * 
+ * This class provides a centralized way to handle errors and exceptions in a DLight application. It allows for logging, rendering, and reporting of errors in both CLI and web environments.
  */
 final class Report
 {
