@@ -22,7 +22,7 @@ class App
      * Version of DLight Framework.
      * @var string
      */
-    public const VERSION = '2026.9.10-dev';
+    public const VERSION = '2026.9.16-dev';
     /**
      * Alias for version constant
      */
@@ -341,9 +341,6 @@ class App
      *
      * - `App::dliDefaultCommand('help')` sets the default command.
      * - `App::dliDefaultCommand()` returns the current configured default or null.
-     *
-     * @param string|null $cmd
-     * @return string|null
      */
     public static function dliDefaultCommand(?string $cmd = null): ?string
     {

@@ -8,12 +8,10 @@ use DLight\Application\View;
 
 class UserController
 {
-    public function __construct(private Users $users)
-    {
-    }
+    public function __construct(private Users $users){}
     public function listUsers()
     {
-        $allUsers = $this->users::mapper()->all();
+        $allUsers = $this->users->select()->fetchAll();
         return View::render('user1/list', ['users' => $allUsers]);
     }
 

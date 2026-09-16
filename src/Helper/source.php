@@ -180,7 +180,7 @@ class Source
 
             // include stored metadata if exists (meta has precedence for user-provided values)
             $meta = self::getMeta($file);
-            if ($meta && is_array($meta)) {
+            if ($meta) {
                 $info['meta'] = $meta;
                 // merge specific keys if present
                 foreach (['name', 'extension', 'mime', 'category', 'resolution', 'duration'] as $k) {

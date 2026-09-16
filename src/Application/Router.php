@@ -158,12 +158,11 @@ class Router
 
     /**
      * Sign a route specification to a handler with optional middleware.
-     * 
+     *
      * **Accept methods**: GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
      * @param string $spec Route specification in the format 'METHOD /path' or 'METHOD1|METHOD2 /path'.
      * @param mixed $handler The handler for the route (callable, or 'Class@method' string).
      * @param array $middleware Optional middleware for the route.
-     * @return static
      */
     public static function sign(string $spec, $handler, array $middleware = []): self
     {
@@ -173,12 +172,11 @@ class Router
 
     /**
      * Sign an API route specification to a handler with optional middleware.
-     * 
+     *
      * **Accept methods**: GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
      * @param string $spec Route specification in the format 'METHOD /path' or 'METHOD1|METHOD2 /path'.
      * @param mixed $handler The handler for the route (callable, or 'Class@method' string).
      * @param array $middleware Optional middleware for the route.
-     * @return static
      */
     public static function signApi(string $spec, $handler, array $middleware = []): self
     {
@@ -191,7 +189,6 @@ class Router
      * @param string $path The route path.
      * @param mixed $handler The handler for the route (callable, or 'Class@method' string).
      * @param array $middleware Optional middleware for the route.
-     * @return static
      */
     public static function all(string $path, $handler, array $middleware = []): self
     {
@@ -205,7 +202,6 @@ class Router
     /**
      * Start a route group with a common prefix.
      * @param string $prefix The route prefix for the group.
-     * @return static
      */
     public static function group(string $prefix): self
     {
@@ -225,7 +221,6 @@ class Router
     /**
      * Set middleware for routes in the current group.
      * @param string|array $mw The middleware (string or array of strings).
-     * @return static
      */
     public static function middleware(string|array $mw): self
     {
@@ -236,7 +231,6 @@ class Router
     /**
      * Set name prefix for routes in the current group.
      * @param string $prefix The name prefix.
-     * @return static
      */
     public static function namePrefix(string $prefix): self
     {
@@ -247,7 +241,6 @@ class Router
     /**
      * Name the last registered route.
      * @param string $name The name for the route.
-     * @return static
      */
     public static function name(string $name): self
     {
@@ -268,7 +261,6 @@ class Router
     /**
      * Define a group action and end the group context.
      * @param callable $cb The group action callback.
-     * @return static
      */
     public static function action(callable $cb): self
     {
@@ -290,7 +282,6 @@ class Router
      * Define a default handler for unmatched routes.
      * @param callable $handler The default handler (callable).
      * @param int|null $code Optional HTTP status code to return (default: 404).
-     * @return static
      */
     public static function default(callable $handler, ?int $code = 404): self
     {

@@ -10,8 +10,7 @@
         "ext-mbstring": "*",
         "ext-sockets": "*",
         "psr/log": "^3",
-        "datahihi1/tiny-env": "*",
-        "symfony/console": "*"
+        "datahihi1/tiny-env": ">=1.1.0"
     },
     "require-dev": {
         "rector/rector": ">=2.4",

@@ -2,6 +2,7 @@
 
 use App\Chat\Chat;
 use DLight\Application\Command;
+use DLight\Application\DB;
 
 if (!isset($cli) || !($cli instanceof Command)) {
     $cli = new Command();
@@ -35,7 +36,7 @@ $cli->register('websocket:server', function () {
 
     $options = getopt('', ['host:', 'port:']);
     $host = $options['host'] ?? '0.0.0.0';
-    $port = isset($options['port']) ? (int)$options['port'] : 9501;
+    $port = isset($options['port']) ? (int) $options['port'] : 9501;
 
     $chat = new Chat($host, $port);
     $chat->start();
@@ -43,7 +44,7 @@ $cli->register('websocket:server', function () {
 
 $cli->registerAlias('ws:server', 'websocket:server');
 
-$cli->register('env',function(){
+$cli->register('env', function () {
     $env = new Datahihi1\TinyEnv\TinyEnv(ROOT_DIR);
     dump($env);
     $env->load();
@@ -51,28 +52,7 @@ $cli->register('env',function(){
     dd(env());
 });
 
-$cli->register('test:symfony_console',function(){
-
-// Khởi tạo output cho CLI
-$output = new Symfony\Component\Console\Output\ConsoleOutput();
-
-// Dữ liệu sản phẩm
-$products = [
-    [1, 'Laptop Gaming ASUS ROG', '25,000,000 đ', 12],
-    [2, 'Bàn phím cơ Keychron K6', '1,850,000 đ', 45],
-    [3, 'Chuột Logitech G304', '850,000 đ', 30],
-    [4, 'Màn hình UltraWide LG 29"', '5,600,000 đ', 5],
-];
-
-// Khởi tạo bảng
-$table = new Symfony\Component\Console\Helper\Table($output);
-
-// Thiết lập tiêu đề và dữ liệu
-$table
-    ->setHeaders(['ID', 'Tên sản phẩm', 'Giá bán', 'Tồn kho'])
-    ->setRows($products);
-
-// Hiển thị bảng ra màn hình terminal
-$output->writeln("<info>=== QUẢN LÝ SẢN PHẨM CLI ===</info>");
-$table->render();
+$cli->register('test:db', function () {
+    $user = DB::mapper()->table('users')->findOrFail(1);
+    dump($user);
 });

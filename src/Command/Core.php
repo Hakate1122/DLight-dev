@@ -263,22 +263,24 @@ class Core
             }
             
             echo "Available commands:\n";
-            echo "  help, -h             Show this help message\n";
-            echo "  help:add             Detailed help for add / add:<type>\n";
-            echo "  version, -v          Show application version\n";
-            if (!App::isRunningFromPhar()) {echo "  server, -s           Start the development server\n";}
-            echo "  list                 List all available commands\n";
-            echo "  test                 Run unit tests\n";
+            echo "  " . cli_green("help, -h") . "             Show this help message\n";
+            echo "  " . cli_green("help:add") . "             Detailed help for add / add:<type>\n";
+            echo "  " . cli_green("version, -v") . "          Show application version\n";
+            if (!App::isRunningFromPhar()) {
+                echo "  " . cli_green("server, -s") . "           Start the development server\n";
+            }
+            echo "  " . cli_green("list") . "                 List all available commands\n";
+            echo "  " . cli_green("test") . "                 Run unit tests\n";
             echo "\n";
             echo "Add commands - create a new components:\n";
-            echo "  add <type>           Create a new component[controller, model, view, middleware, command, mail]\n";
-            echo "  add:controller       Create a new controller\n";
-            echo "  add:model            Create a new model\n";
-            echo "  add:view             Create a new view\n";
-            echo "  add:middleware       Create a new middleware\n";
-            echo "  add:command          Create a new command\n";
-            echo "  add:mail             Create a new mail class\n";
-            echo "  For details on each command, use ". cli_yellow("php dli help:add") . "\n";
+            echo "  " . cli_green("add <type>") . "           Create a new component[controller, model, view, middleware, command, mail]\n";
+            echo "  " . cli_green("add:controller") . "       Create a new controller\n";
+            echo "  " . cli_green("add:model") . "            Create a new model\n";
+            echo "  " . cli_green("add:view") . "             Create a new view\n";
+            echo "  " . cli_green("add:middleware") . "       Create a new middleware\n";
+            echo "  " . cli_green("add:command") . "          Create a new command\n";
+            echo "  " . cli_green("add:mail") . "             Create a new mail class\n";
+            echo "  For details on each command, use ". cli_green("php dli help:add") . "\n";
             echo "\n";
         };
     }

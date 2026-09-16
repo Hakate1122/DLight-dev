@@ -312,9 +312,7 @@ class Validator
                     $msg = $messages[$key] ?? "$field validation failed for $ruleName";
                     $this->errors[$field][] = $msg;
 
-                    if ($this->firstError === null) {
-                        $this->firstError = $msg;
-                    }
+                    $this->firstError ??= $msg;
                 }
             }
         }

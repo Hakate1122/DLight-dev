@@ -11,9 +11,9 @@ use DLight\Database\Traits\SoftDelete;
  */
 class Users extends Model
 {
+    use SoftDelete;
 
     protected $table = 'users';
     protected $selectable = ['id', 'name', 'email', 'created_at', 'updated_at'];
     protected $fillable = ['name', 'email'];
-    protected $hidden = ['password'];
 }

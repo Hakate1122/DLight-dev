@@ -1,3 +1,13 @@
+## `2026.9.16-dev` (2026-09-16)
+
+### Added
+- Add encode command to encoding PHP source code if you want to protect your source code from being read by others. Encoder using ionCube PHP Encoder (Developing ...)
+- Helper function `dump_stack_trace()` to print a formatted stack trace for debugging purposes. This function can be used in development to quickly identify the call stack leading to a specific point in the code.
+
+### Fixed
+- DB.php: Fix invalid dynamic method forwarding between mapper and builder design layers.
+- Fix soft delete behavior when deleting a record with a null `deleted_at` column. The framework now correctly sets the `deleted_at` timestamp instead of throwing an error or failing silently.
+
 ## `2026.9.10-dev` (2026-09-10)
 
 ### Added

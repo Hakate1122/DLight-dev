@@ -8,7 +8,7 @@ use DLight\Application\View;
 
 class HomeController
 {
-    #[\DLight\Attribute\Route(path: '/', methods: ['GET'], name: 'home')]
+    #[\DLight\Attribute\Route(path: '/', name: 'home', methods: ['GET'])]
     public function home()
     {
         return View::render('home', [

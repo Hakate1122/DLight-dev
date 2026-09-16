@@ -88,7 +88,10 @@ class MysqlBuilder extends BaseBuilder implements BuilderInterface {
             return 0;
         }
         if ($op === 'delete') {
-            if ($this->useSoftDelete && $this->tableHasDeletedAt()) {
+            if ($this->useSoftDelete) {
+                if (!$this->tableHasDeletedAt()) {
+                    throw new \RuntimeException("Table '{$this->table}' does not have 'deleted_at' column for soft delete.");
+                }
                 $sql = $this->toSql();
                 $sql = preg_replace('/^\s*DELETE\s+FROM\s+[`"]?[^`"]+[`"]?/', "UPDATE `{$this->table}` SET `deleted_at` = ?", $sql);
                 $bindings = array_merge([date('Y-m-d H:i:s')], $this->getBindings());

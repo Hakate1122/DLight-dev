@@ -86,6 +86,6 @@ class TokenGenerator
         }
 
         $payload = json_decode(base64_decode(str_replace(['-', '_'], ['+', '/'], $base64UrlPayload)), true);
-        return !(isset($payload['exp']) && time() > $payload['exp']);
+        return !isset($payload['exp']) || time() <= $payload['exp'];
     }
 }

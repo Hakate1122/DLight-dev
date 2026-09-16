@@ -19,7 +19,6 @@ class Register
         $cli->register('server', Server::server())->info('Start the development server');
         $cli->registerAlias('-s', 'server')->infoAlias('server');
         $cli->register('list', Core::list($cli->list()))->info('List all available commands');
-        $cli->register('setting', Setting::handle())->info('Show or set application settings');
         $cli->register('add', Add::handle())->info('Add a new component');
         $cli->registerAlias('make', 'add')->infoAlias('add');
         $cli->register('add:controller', Add::controller())->info('Create a new controller');
@@ -28,6 +27,7 @@ class Register
         $cli->register('add:command', Add::command())->info('Create a new command');
         $cli->register('add:middleware', Add::middleware())->info('Create a new middleware');
         $cli->register('add:mail', Add::mail())->info('Create a new mail class');
+        $cli->register('encode', \DLight\Command\Encode::handle())->info('Encode PHP code with ionCube Loader');
         $cli->register('test', Test::handle())->info('Run test suite (phpunit)');
     }
 }

@@ -9,6 +9,7 @@ namespace DLight\Command\Helper;
  * including validation and special input types.
  * 
  * Example usage: 
+ * 
  * * ConsoleInput::prompt("Enter your name:");
  * * ConsoleInput::askYesNo("Continue?", true);
  * * ConsoleInput::select("Choose option:", ["1" => "One", "2" => "Two"], "1");
@@ -19,10 +20,14 @@ class ConsoleInput
 {
     /**
      * Basic prompt with optional validation.
+     * 
+     * Usage:
+     * 
+     * ConsoleInput::prompt("Enter your name:", "Default Name", ConsoleInput::validateNotEmpty());
      *
      * @param string $message The prompt message.
      * @param string|null $default The default value if input is empty.
-     * @param callable|null $validator  Return true if valid, or string error message if invalid.
+     * @param callable|null $validator  Return true if valid, or string error message if invalid. The valid validator fields include: `ConsoleInput::validateNotEmpty()`, `ConsoleInput::validateString()`, `ConsoleInput::validateUrl()`, `ConsoleInput::validateNumber()`, `ConsoleInput::validateEmail()`, `ConsoleInput::validateRegex($pattern)`.
      */
     public static function prompt(
         string $message,
@@ -56,7 +61,7 @@ class ConsoleInput
                 }
 
                 if (is_string($valid)) {
-                    echo "Wrong input: {$valid}\n";
+                    echo cli_red("Wrong input: {$valid}\n");
                     continue;
                 }
             }
@@ -65,7 +70,7 @@ class ConsoleInput
                 return $input;
             }
 
-            echo "Please enter a non-empty value.\n";
+            echo cli_red("Input cannot be empty. Please try again.\n");
         }
     }
 
@@ -100,7 +105,7 @@ class ConsoleInput
                 return false;
             }
 
-            echo "Please answer yes or no.\n";
+            echo cli_red("Please answer yes or no.\n");
         }
     }
 
@@ -147,7 +152,7 @@ class ConsoleInput
                 return $input;
             }
 
-            echo "Invalid option. Try again.\n";
+            echo cli_red("Invalid option. Try again.\n");
         }
     }
 
@@ -176,7 +181,7 @@ class ConsoleInput
             $input = trim(fgets(STDIN));
 
             if (!is_numeric($input)) {
-                echo "Please enter a number.\n";
+                echo cli_red("Please enter a number.\n");
                 continue;
             }
 
@@ -186,7 +191,7 @@ class ConsoleInput
                 return $selectedIdx === $correctIndex;
             }
 
-            echo "Invalid choice. Please choose between 1 and " . count($choices) . ".\n";
+            echo cli_red("Invalid choice. Please choose between 1 and " . count($choices) . ".\n");
         }
     }
 
@@ -203,7 +208,7 @@ class ConsoleInput
         ?string $default = null
     ): string {
         if (strncasecmp(PHP_OS, 'WIN', 3) === 0) {
-            echo "Warning: Secret input may be visible on Windows consoles.\n";
+            echo cli_red("Warning: Secret input may be visible on Windows consoles.\n");
             return self::prompt($message, $default);
         }
         $cmd = "/usr/bin/env bash -c 'read -s -p \"" . addslashes($message) . ": \" mypassword && echo \$mypassword'";

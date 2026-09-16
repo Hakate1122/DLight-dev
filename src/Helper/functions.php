@@ -478,4 +478,70 @@ if (!function_exists('asset')) {
     {
         return getBaseUrl() . ltrim($path, '/');
     }
+
+    if (!function_exists('dump_stack_track')) {
+        /**
+         * Print a readable stack trace without stopping execution.
+         * Useful for tracing call flow when an error isn't obvious.
+         *
+         * @param int $limit Maximum frames to show.
+         * @param bool $return When true, return the output string instead of echoing.
+         * @param bool|null $asHtml Force HTML output when true, CLI output when false. Null auto-detects.
+         * @return string|null
+         */
+        function dump_stack_track(int $limit = 50, bool $return = false, ?bool $asHtml = null)
+        {
+            $isCli = (PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg');
+            if ($asHtml === null) {
+                $asHtml = !$isCli;
+            }
+
+            $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+            // remove current frame (this function)
+            array_shift($backtrace);
+
+            $out = '';
+            $idx = 1;
+            foreach ($backtrace as $frame) {
+                if ($idx > $limit) {
+                    break;
+                }
+                $file = $frame['file'] ?? '[internal]';
+                $line = $frame['line'] ?? 0;
+                $func = ($frame['class'] ?? '') . ($frame['type'] ?? '') . ($frame['function'] ?? '');
+                $out .= "#{$idx} {$func} called at {$file}:{$line}\n";
+
+                if ($file !== '[internal]' && is_readable($file) && $line > 0) {
+                    $lines = @file($file);
+                    if ($lines) {
+                        $start = max(0, $line - 3);
+                        $end = min(count($lines), $line + 2);
+                        for ($ln = $start; $ln < $end; $ln++) {
+                            $prefix = ($ln + 1 === $line) ? '=> ' : '   ';
+                            $out .= sprintf("%s%4d: %s\n", $prefix, $ln + 1, rtrim($lines[$ln]));
+                        }
+                    }
+                }
+                $out .= "\n";
+                $idx++;
+            }
+
+            if ($asHtml) {
+                $html = '<pre style="background:#111;color:#eee;padding:10px;border-radius:6px;overflow:auto;font-size:13px;line-height:1.3;">' . htmlspecialchars($out, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</pre>';
+                if ($return) {
+                    return $html;
+                }
+                echo $html;
+                return null;
+            }
+
+            if ($return) {
+                return $out;
+            }
+
+            // CLI: print to stdout
+            echo $out . PHP_EOL;
+            return null;
+        }
+    }
 }

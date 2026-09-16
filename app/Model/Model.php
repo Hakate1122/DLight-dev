@@ -10,52 +10,55 @@ use DLight\Database\DatabaseManager;
 use DLight\Database\Exception\CallWrongMethodOnDbDesign;
 
 /**
- * #### Database handler
+ * #### Model database proxy
  * Database proxy to Mapper/Builder.
  *
  * The actual implementation behind this model depends on env('DB_DESIGN'):
  * - 'builder': forwards to Query Builder with fluent methods
  * - 'mapper': forwards to Mapper with CRUD helpers
  *
- * @method \Craft\Database\Interfaces\BuilderInterface table(string $table)
- * @method \Craft\Database\Interfaces\BuilderInterface select($columns = ['*'])
- * @method \Craft\Database\Interfaces\BuilderInterface where($column, $value = null, $operator = null)
- * @method \Craft\Database\Interfaces\BuilderInterface insert(array $data)
- * @method \Craft\Database\Interfaces\BuilderInterface update(array $data)
- * @method \Craft\Database\Interfaces\BuilderInterface delete()
- * @method mixed execute()
- * @method array fetchAll()
- * @method mixed fetch(string $type = 'assoc')
- * @method mixed first(string $type = 'assoc')
- * @method array get()
- * @method array mapper()
- * @method array builder()
+ * @method \DLight\Database\Interfaces\BuilderInterface table(string $table) Set the table for the query.
+ * @method \DLight\Database\Interfaces\BuilderInterface select($columns = ['*']) Select columns for the query.
+ * @method \DLight\Database\Interfaces\BuilderInterface where($column, $value = null, $operator = null) Add a where condition to the query.
+ * @method \DLight\Database\Interfaces\BuilderInterface insert(array $data) Insert data into the table.
+ * @method \DLight\Database\Interfaces\BuilderInterface update(array $data) Update data in the table.
+ * @method \DLight\Database\Interfaces\BuilderInterface delete() Delete records from the table.
+ * @method \DLight\Database\Interfaces\BuilderInterface softDelete(int|string|null $id = null) Soft delete records from the table.
+ * @method \DLight\Database\Interfaces\BuilderInterface execute() Execute the query.
+ * @method \DLight\Database\Interfaces\BuilderInterface fetchAll() Fetch all results from the query.
+ * @method \DLight\Database\Interfaces\BuilderInterface fetch(string $type = 'assoc') Fetch a single result from the query.
+ * @method \DLight\Database\Interfaces\BuilderInterface first(string $type = 'assoc') Fetch the first result from the query.
+ * @method \DLight\Database\Interfaces\BuilderInterface get() Get the results from the query.
  *
- * @method array|null find($id)
- * @method array all()
- * @method array where($column, $value, $operator)
- * @method mixed create(array $data)
- * @method mixed update($id, array $data)
- * @method mixed delete($id)
- * @method mixed insertGetId(array $data)
- * @method bool executeUpdate(array $data)
- * @method bool executeDelete()
+ * @method \DLight\Database\Interfaces\MapperInterface find($id) Find a record by its ID.
+ * @method \DLight\Database\Interfaces\MapperInterface findOrFail($id) Find a record by its ID or throw an exception if not found.
+ * @method \DLight\Database\Interfaces\MapperInterface all() Get all records.
+ * @method \DLight\Database\Interfaces\MapperInterface where($column, $value, $operator) Add a where condition to the query.
+ * @method \DLight\Database\Interfaces\MapperInterface create(array $data) Create a new record.
+ * @method \DLight\Database\Interfaces\MapperInterface update($id, array $data) Update a record by its ID.
+ * @method \DLight\Database\Interfaces\MapperInterface delete($id) Delete a record by its ID.
+ * @method \DLight\Database\Interfaces\MapperInterface insertGetId(array $data) Insert a new record and get its ID.
+ * @method \DLight\Database\Interfaces\MapperInterface executeUpdate(array $data) Execute an update operation.
+ * @method \DLight\Database\Interfaces\MapperInterface executeDelete() Execute a delete operation.
  * 
- * @method mixed mapper()
- * @method mixed builder()
  */
 class Model extends DatabaseManager
 {
-    // /**
-    //  * Summary of table
-    //  * @var string
-    //  */
-    // protected $table;
-    // /**
-    //  * Optional columns to select (string|array|null)
-    //  * @var mixed
-    //  */
-    // protected $selectable;
+    /**
+     * Summary of table
+     * @var string
+     */
+    protected $table;
+    /**
+     * Optional columns to select (string|array|null)
+     * @var mixed
+     */
+    protected $selectable;
+    /**
+     * Optional columns to fill (string|array|null)
+     * @var mixed
+     */
+    protected $fillable;
     /**
      * Check if this model uses SoftDelete trait
      */
@@ -85,36 +88,6 @@ class Model extends DatabaseManager
             $selectable = property_exists($this, 'selectable') ? $this->selectable : null;
             $this->mapper = $this->getMapper($this->table, $this->usesSoftDelete(), $selectable);
         }
-    }
-
-    /**
-     * Set the table for the query.
-     * @return static
-     */
-    public static function table(string $table): self
-    {
-        $instance = new static();
-        $instance->table = $table;
-        $selectable = property_exists($instance, 'selectable') ? $instance->selectable : null;
-        $instance->mapper = $instance->getMapper($table, $instance->usesSoftDelete(), $selectable);
-        return $instance;
-    }
-
-    /**
-     * Create a mapper-based model instance regardless of env DB_DESIGN.
-     */
-    public static function mapper(): self
-    {
-        $instance = new static();
-        return $instance->switchDesign('mapper');
-    }
-
-    /**
-     * Switch current model instance to builder design.
-     */
-    public function builder(): self
-    {
-        return $this->switchDesign('builder');
     }
 
     /**

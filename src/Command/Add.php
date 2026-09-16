@@ -2,8 +2,6 @@
 
 namespace DLight\Command;
 
-use DLight\Application\App;
-
 class Add
 {
 	private static function studly(string $value): string
