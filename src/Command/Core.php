@@ -5,6 +5,11 @@ namespace DLight\Command;
 use DLight\Application\App;
 use DLight\Command\Helper\ConsoleInput;
 
+use function count;
+use function is_array;
+use function is_string;
+use function strlen;
+
 /**
  * Core command implementations for the CLI application.
  * 

@@ -4,6 +4,10 @@ namespace DLight\Command;
 
 use DLight\Application\App;
 
+use function count;
+use function defined;
+use function sprintf;
+
 /**
  * A command to start a local development server.
  *

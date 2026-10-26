@@ -16,7 +16,8 @@ use DLight\Database\Mapper\SqliteMapper;
 use DLight\Database\QueryBuilder\MysqlBuilder;
 use DLight\Database\QueryBuilder\SqliteBuilder;
 
-use function \in_array;
+use function in_array;
+use function is_object;
 
 /**
  * **Database Manager**
@@ -258,9 +259,12 @@ class DatabaseManager
     protected function getConfig($driver)
     {
         if (str_contains($driver, 'sqlite')) {
-            return [
-                'database' => env('DB_NAME') . '.db',
-            ];
+            $dbName = (string) env('DB_NAME', ':memory:');
+            if ($dbName === ':memory:' || $dbName === '' || str_ends_with($dbName, '.db') || str_ends_with($dbName, '.sqlite') || str_ends_with($dbName, '.sqlite3')) {
+                return ['database' => $dbName];
+            }
+
+            return ['database' => $dbName . '.db'];
         }
         if (str_contains($driver, 'mysql')) {
             return [

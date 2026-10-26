@@ -1,10 +1,52 @@
 <?php
+if (!function_exists('getCustomErrorPage')) {
+  /**
+   * Try to render a custom view-based error page when a matching file exists.
+   * Supported conventions: resource/view/errors/{code}.php, resource/view/error/{code}.php, resource/view/{code}.php
+   */
+  function getCustomErrorPage(int $code, string $message): ?string
+  {
+    if (!defined('ROOT_DIR')) {
+      define('ROOT_DIR', dirname(__DIR__, 2) . DIRECTORY_SEPARATOR);
+    }
+
+    if (!defined('INDEX_DIR')) {
+      define('INDEX_DIR', ROOT_DIR . 'public' . DIRECTORY_SEPARATOR);
+    }
+
+    if (!class_exists('DLight\\Application\\View')) {
+      return null;
+    }
+
+    $candidates = [
+      'errors.' . $code,
+      'error.' . $code,
+      (string) $code,
+    ];
+
+    foreach ($candidates as $view) {
+      try {
+        return \DLight\Application\View::render($view, ['code' => $code, 'message' => $message]);
+      } catch (Throwable $e) {
+        continue;
+      }
+    }
+
+    return null;
+  }
+}
+
 if (!function_exists('getErrorPage')) {
   /**
    * Get error page content
    */
   function getErrorPage(int $code, string $message): string
   {
+    $custom = getCustomErrorPage($code, $message);
+    if ($custom !== null && $custom !== false) {
+      return $custom;
+    }
+
     return <<<HTML
   <!doctype html>
   <html lang="vi">

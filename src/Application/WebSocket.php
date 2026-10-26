@@ -2,25 +2,12 @@
 
 namespace DLight\Application;
 
-use function ord;
-use function chr;
-use function pack;
-use function base64_encode;
-use function in_array;
-use function preg_match;
-use function socket_create;
-use function socket_set_option;
-use function socket_bind;
-use function socket_listen;
-use function socket_accept;
-use function socket_read;
-use function socket_write;
-use function socket_close;
-use function socket_select;
-use function socket_strerror;
-use function spl_object_id;
 use function call_user_func_array;
+use function chr;
+use function in_array;
 use function is_callable;
+use function ord;
+use function strlen;
 
 /**
  * **WebSocket Server**

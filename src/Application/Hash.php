@@ -20,9 +20,6 @@ class Hash
     public static function default(string $string): string
     {
         $hash = password_hash($string, PASSWORD_DEFAULT);
-        if ($hash === false) {
-            throw new RuntimeException('Default hashing failed.');
-        }
         return $hash;
     }
 
@@ -36,9 +33,6 @@ class Hash
     public static function bcrypt(string $string, $options = []): string
     {
         $hash = password_hash($string, PASSWORD_BCRYPT, $options);
-        if ($hash === false) {
-            throw new RuntimeException('Bcrypt hashing failed.');
-        }
         return $hash;
     }
 
@@ -52,9 +46,6 @@ class Hash
     public static function argon2i(string $string, array $options = []): string
     {
         $hash = password_hash($string, PASSWORD_ARGON2I, $options);
-        if ($hash === false) {
-            throw new RuntimeException('Argon2i hashing failed.');
-        }
         return $hash;
     }
 

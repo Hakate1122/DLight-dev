@@ -11,7 +11,7 @@ $router = new DLight\Application\Router();
 
 $router->sign('GET /h', function () {
     echo "<img src='" . asset('unnamed.jpg') . "' alt='Logo'>";
-})->name('home.alias');
+},['needed'])->name('home.alias');
 
 $router->sign('GET /test',fn() => View::render('test'))->name('test');
 
@@ -111,6 +111,11 @@ $router->sign('GET|POST /mail', function () {
 })->name('mail');
 
 $router->sign('GET /site-map', [\App\Controller\SitemapController::class, 'index'])->name('sitemap');
+
+$router->sign('GET /env', function () {
+    $env = new \Datahihi1\TinyEnv\TinyEnv(ROOT_DIR);
+    dump($env->env());
+})->name('demo.env');
 
 $router->scanControllerAttributes([
     App\Controller\UserController::class,

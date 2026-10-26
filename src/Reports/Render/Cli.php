@@ -4,6 +4,11 @@ namespace DLight\Reports\Render;
 
 use DLight\Reports\Interface\RenderInterface;
 
+use function count;
+use function is_array;
+use function is_string;
+use function sprintf;
+
 /**
  * CLI Renderer for DLight Reports
  */

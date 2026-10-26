@@ -11,6 +11,14 @@ use ReflectionFunction;
 use ReflectionNamedType;
 use DLight\Application\Middleware;
 
+use function array_key_exists;
+use function array_merge;
+use function in_array;
+use function is_array;
+use function is_callable;
+use function is_string;
+use function strlen;
+
 /**
  * **HTTP Router**
  * 
@@ -66,9 +74,7 @@ class Router
     ];
 
     /* --------------------------------------------------------------------- */
-    public function __construct(private mixed $request = null, private array $container = [])
-    {
-    }
+    public function __construct(private mixed $request = null, private array $container = []){}
 
     /* --------------------------------------------------------------------- */
     public function addMiddleware(callable $mw): void
@@ -340,6 +346,11 @@ class Router
     }
 
     /* -------------------------- RUNTIME -------------------------- */
+    /**
+     * Run the router instance to handle the current HTTP request.
+     * This method processes the request, matches it against registered routes,
+     * and dispatches the appropriate handler or returns an error response.
+     */
     public function runInstance(): void
     {
         $this->mergeStaticRoutes();
@@ -394,6 +405,11 @@ class Router
         echo get404pages();
     }
 
+    /**
+     * Static entry point to run the router. This method creates an instance of the Router and executes the routing logic.
+     * 
+     * @return void
+     */
     public static function run(): void
     {
         (new self())->runInstance();
@@ -481,9 +497,13 @@ class Router
         $context = ['params' => $params, 'request' => $this->request];
 
         foreach ($mw as $m) {
-            $res = is_string($m)
-                ? Middleware::run($m, $context)
-                : $m($context);
+            if (is_string($m)) {
+                $res = Middleware::run($m, $context);
+            } elseif (is_callable($m)) {
+                $res = $m($context);
+            } else {
+                throw new Exception('Invalid middleware provided: ' . get_debug_type($m));
+            }
 
             if ($res === false) {
                 return;

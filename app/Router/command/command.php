@@ -1,8 +1,11 @@
 <?php
 
 use App\Chat\Chat;
+use App\Middleware\UserAuthencation;
 use DLight\Application\Command;
 use DLight\Application\DB;
+
+UserAuthencation::sign();
 
 if (!isset($cli) || !($cli instanceof Command)) {
     $cli = new Command();
@@ -22,7 +25,7 @@ $cli->register('send:mail', function () {
         $mail = new DLight\Application\Mail();
         $mail->to(email: 'datd5400@gmail.com')
             ->subject(subject: 'Test Email from DLight Mailer 2.0')
-            ->body('This is a test email sent from DLight Mailer 2.0.');
+            ->view('emails.mail');
         $mail->send();
         echo cli_green("Email sent successfully.\n");
     } catch (Exception $e) {
@@ -53,6 +56,13 @@ $cli->register('env', function () {
 });
 
 $cli->register('test:db', function () {
-    $user = DB::mapper()->table('users')->findOrFail(1);
-    dump($user);
+$users = DB::mapper()
+    ->table('users')
+    ->all();
+
+dump($users);
+});
+
+$cli->register('mtest', function () {
+
 });

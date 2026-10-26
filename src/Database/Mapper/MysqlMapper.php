@@ -1,6 +1,8 @@
 <?php
 namespace DLight\Database\Mapper;
 
+use function count;
+
 class MysqlMapper extends BaseMapper {
     public function find($id) {
         $cols = $this->columns;

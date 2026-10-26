@@ -3,8 +3,9 @@ namespace DLight\Database\QueryBuilder;
 
 use DLight\Database\Interfaces\BuilderInterface;
 
-use function \is_array;
-use function \count;
+use function count;
+use function func_get_args;
+use function is_array;
 
 abstract class BaseBuilder implements BuilderInterface {
     protected $table;

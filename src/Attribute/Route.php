@@ -31,7 +31,5 @@ class Route extends Router
         public ?array $middleware = null,
     ){}
 
-    public function signScanUseAttribute()
-    {
-    }
+    public function signScanUseAttribute(){}
 }

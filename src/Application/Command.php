@@ -4,6 +4,11 @@ namespace DLight\Application;
 
 use DLight\Command\Helper\CommandEntry;
 
+use function array_key_exists;
+use function func_num_args;
+use function is_callable;
+use function is_string;
+
 /**
  * **Command Manager**
  * 

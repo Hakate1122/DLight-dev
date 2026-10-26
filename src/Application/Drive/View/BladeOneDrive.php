@@ -5,6 +5,8 @@ namespace DLight\Application\Drive\View;
 use DLight\Application\Interfaces\ViewEngine;
 use eftec\bladeone\BladeOne;
 
+use function defined;
+
 /**
  * BladeOneDrive View Engine using BladeOne templating engine.
  */

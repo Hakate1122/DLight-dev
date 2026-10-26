@@ -6,6 +6,9 @@ use DLight\Application\App;
 use DLight\Reports\Interface\HandlerInterface;
 use DLight\Reports\Interface\RenderInterface;
 
+use function defined;
+use function sprintf;
+
 /**
  * Handler - Error and exception handling class
  */

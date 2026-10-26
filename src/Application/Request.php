@@ -2,6 +2,8 @@
 
 namespace DLight\Application;
 
+use function in_array;
+
 /**
  * **HTTP Request Handler**
  *

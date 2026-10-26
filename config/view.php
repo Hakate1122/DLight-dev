@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'view_path' => ROOT_DIR . 'resource/view/',
-    'engine' => 'twig', // Access default view engine: 'php', 'bladeone', 'twig', etc.
+    'engine' => 'bladeone', // Access default view engine: 'php', 'bladeone', 'twig', etc.
     'drives' => [
         // BladeOne view drive configuration
         'bladeone' => [

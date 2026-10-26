@@ -2,6 +2,8 @@
 
 namespace DLight\Command;
 
+use function is_resource;
+
 /**
  * DLight ionCube Encoder command.
  *

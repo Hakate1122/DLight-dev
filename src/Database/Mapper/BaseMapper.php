@@ -3,6 +3,10 @@ namespace DLight\Database\Mapper;
 
 use DLight\Database\Interfaces\MapperInterface;
 
+use function count;
+use function func_get_args;
+use function is_array;
+
 abstract class BaseMapper implements MapperInterface {
     protected ?bool $hasDeletedAt = null;
 

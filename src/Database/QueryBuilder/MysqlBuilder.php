@@ -4,8 +4,9 @@ namespace DLight\Database\QueryBuilder;
 
 use DLight\Database\Interfaces\BuilderInterface;
 
-use function \array_keys;
-use function \is_object;
+use function array_keys;
+use function count;
+use function is_object;
 
 class MysqlBuilder extends BaseBuilder implements BuilderInterface {
     public function toSql(): string {

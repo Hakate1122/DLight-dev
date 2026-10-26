@@ -4,6 +4,10 @@ namespace DLight\Application;
 
 use DLight\Application\View;
 
+use function is_bool;
+use function is_array;
+use function in_array;
+
 /**
  * **Secure SMTP Mailer**
  *

@@ -4,6 +4,7 @@ sitemap.xml
 .vscode
 .phpunit.result.cache
 .env
+.editorconfig
 *.pem
 package-lock.json
 *.mp4

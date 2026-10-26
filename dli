@@ -15,7 +15,7 @@ if (php_sapi_name() !== 'cli') {
 	die("This script can only be run from the command line.");
 }
 if (!file_exists(ROOT_DIR . 'vendor/autoload.php')) {
-	die("\033[31mAutoloader not found. Please run 'composer install' in the project root.\033[0m");
+	die("\033[31mAutoloader not found. Please run 'composer install' in the project root.\033[0m"."\n");
 }
 
 require_once ROOT_DIR . 'vendor/autoload.php';

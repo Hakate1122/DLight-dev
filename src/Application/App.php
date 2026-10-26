@@ -8,6 +8,12 @@ use DLight\Command\Register;
 use Datahihi1\TinyEnv\TinyEnv;
 use Exception;
 
+use function defined;
+use function func_num_args;
+use function in_array;
+use function is_object;
+use function is_string;
+
 /**
  * **Application Core**
  *
@@ -22,7 +28,7 @@ class App
      * Version of DLight Framework.
      * @var string
      */
-    public const VERSION = '2026.9.16-dev';
+    public const VERSION = '2026.10.26-dev';
     /**
      * Alias for version constant
      */
@@ -179,8 +185,9 @@ class App
     /**
      * Set maintenance mode if enabled in environment variables
      * @param bool $noEnv Not read from env, always enable maintenance
+     * @param bool $testFlag Test mode flag include localhost
      */
-    public static function setMaintenanceMode($noEnv = false): void
+    public static function setMaintenanceMode(bool $noEnv = false, bool $testFlag = false): void
     {
         $utc_env = $_SERVER['APP_TIMEZONE'] ?? (function_exists('env') ? env('APP_TIMEZONE', 'UTC') : 'UTC');
         date_default_timezone_set($utc_env);
@@ -191,7 +198,7 @@ class App
         $serverIps = ['127.0.0.1', '::1'];
         $clientIp = $_SERVER['REMOTE_ADDR'] ?? '';
 
-        if (in_array($clientIp, $serverIps)) {
+        if (in_array($clientIp, $serverIps) && $testFlag === false) {
             return;
         }
 
@@ -597,9 +604,6 @@ class App
         // Configure timezone
         $this->configureTimezone();
 
-        // Validate session configuration
-        $this->validateSessionConfig();
-
         // Validate required environment variables for services
         $this->validateServiceConfig();
         $healthStatus = $this->healthCheck();
@@ -607,8 +611,13 @@ class App
             throw new Exception('Application health check failed.');
         }
 
-        // Start session
-        Session::start();
+        if (extension_loaded('session')) {
+            // Validate session configuration
+            $this->validateSessionConfig();
+
+            // Start session
+            Session::start();
+        }
 
         // Set CORS headers for API requests
         setApiCorsHeaders();
@@ -644,9 +653,6 @@ class App
 
         // Configure timezone
         $this->configureTimezone();
-
-        // Validate session configuration
-        $this->validateSessionConfig();
 
         // Validate required environment variables for services
         $this->validateServiceConfig();

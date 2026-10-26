@@ -60,7 +60,7 @@ class View
      * @param string|null $viewPath The custom view path to use. If null, uses the instance's view path.
      * @return string
      */
-    public static function render(string $view, array $data = [], ?string $viewPath = null)
+    public static function render(string $view, ?array $data = [], ?string $viewPath = null)
     {
         $instance = new self($viewPath);
         $data['title'] ??= '<title>Default Title</title>';
@@ -74,7 +74,7 @@ class View
      * @param array $data Data to be passed to the view.
      * @return string
      */
-    public function view(string $view, array $data = [])
+    public function view(string $view, ?array $data = [])
     {
         if ($this->engine === 'php' || !$this->engineInstance) {
             $view = str_replace(['..', '\\'], '', $view);

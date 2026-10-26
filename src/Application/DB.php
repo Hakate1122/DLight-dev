@@ -9,6 +9,10 @@ use DLight\Database\Adapter\PdoSqliteAdapter;
 use DLight\Database\DatabaseManager;
 use DLight\Database\Exception\CallWrongMethodOnDbDesign;
 
+use function call_user_func_array;
+use function in_array;
+use function is_object;
+
 /**
  * **Database Handler**
  * 

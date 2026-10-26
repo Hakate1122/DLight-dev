@@ -244,7 +244,18 @@ function formatBytes($bytes)
             </div>
 
             <div class="edit-hint">
-                Edit <strong>resource/view/home.php</strong> to change this page.
+                Edit <strong>
+                    <?php
+                    if (class_exists('eftec\bladeone\BladeOne')) {
+                        echo 'resource/view/home.blade.php';
+                    } elseif (class_exists('Twig\Environment')) {
+                        echo 'resource/view/home.twig';
+                    }
+                     else {
+                        echo 'resource/view/home.php';
+                    }
+                    ?>
+                </strong> to change this page.
             </div>
         </div>
 

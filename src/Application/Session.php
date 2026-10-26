@@ -2,6 +2,8 @@
 
 namespace DLight\Application;
 
+use function array_key_exists;
+
 /**
  * **Session Management**
  * 

@@ -4,6 +4,13 @@ namespace DLight\Command;
 
 use DLight\Application\App;
 
+use function count;
+use function defined;
+use function is_string;
+use function is_resource;
+use function sprintf;
+use function strlen;
+
 /**
  * Run the project's test suite (PHPUnit) from the CLI.
  *

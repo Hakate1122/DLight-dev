@@ -5,10 +5,6 @@
     "license": "MIT",
     "require": {
         "php": ">=8.0",
-        "ext-openssl": "*",
-        "ext-pdo": "*",
-        "ext-mbstring": "*",
-        "ext-sockets": "*",
         "psr/log": "^3",
         "datahihi1/tiny-env": ">=1.1.0"
     },
@@ -16,6 +12,10 @@
         "rector/rector": ">=2.4",
         "phpstan/phpstan": ">=2.1",
         "phpunit/phpunit": ">=9.6"
+    },
+    "suggest": {
+        "ext-ftp": "Required only when using the FTP storage driver in DLight\\Application\\File. Install and enable the PHP FTP extension to use FTP storage.",
+        "ext-sockets": "Required only when using WebSocket server in DLight\\Application\\WebSocket. Install and enable the PHP Sockets extension to use WebSocket server."
     },
     "autoload": {
         "psr-4": {
@@ -31,7 +31,7 @@
         ]
     },
     "scripts": {
-        "CopyEnv": "@php -r \"if (file_exists('.env.test') && !file_exists('.env')) copy('.env.test', '.env');\"",
+        "CopyEnv": "@php -r \"if (is_file('.env.test') && !file_exists('.env')) { if (!copy('.env.test', '.env')) { exit(1); } }\"",
         "post-install-cmd": [
             "@CopyEnv"
         ],

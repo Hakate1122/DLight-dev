@@ -7,6 +7,8 @@ use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 use \Twig\TwigFunction;
 
+use function is_array;
+
 /**
  * TwigDrive class for rendering Twig templates.
  */
